@@ -17,6 +17,7 @@ public class OsProcessSource implements ProcessSource {
      */
     @Override
     public Stream<Process> getProcesses() {
+//        ProcessHandle.allProcesses().forEach(p->{System.out.println(p.info().arguments().map(Object::toString));});
 //        ProcessHandle.allProcesses().forEach(p->{System.out.println(p.info().arguments());});
 //        return Stream.of(new Process(1,  1, new User("root"), "init", new String[0]),
 //                         new Process(42, 1, new User("Codecooler"), "processWatch", new String[] {"--cool=code", "-v"}));
@@ -24,6 +25,7 @@ public class OsProcessSource implements ProcessSource {
         ArrayList<Process> processList = new ArrayList<Process>();
         ProcessHandle.allProcesses().forEach(p->{processList.add(convertProcessHandleToProcess(p));});
         //System.out.println(processList);
+        System.out.println(processList);
         return processList.stream();
 //        return Stream.of(processList);
     }
@@ -37,9 +39,10 @@ public class OsProcessSource implements ProcessSource {
         }
         int index=part.size()-1;
         System.out.println(part.get(index));
-
+        String[] emptyStringArray = new String[1];
+        emptyStringArray[0] = "";
         //System.out.println(processHandle.info().command().orElse(""));
-        return new Process(processHandle.pid(), processHandle.parent().hashCode(), new User(processHandle.info().user().orElse("")), part.get(index), new String[0]);
+        return new Process(processHandle.pid(), processHandle.parent().hashCode(), new User(processHandle.info().user().orElse("")), part.get(index), processHandle.info().arguments().orElse(emptyStringArray));
    }
 
 }
