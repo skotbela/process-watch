@@ -36,8 +36,7 @@ public class Process {
      * @return a long representing the process ID.
      */
     public long getPid() {
-        return pid;
-    }
+        return pid; }
 
     /**
      * Get the Process ID of the process' parent process.
