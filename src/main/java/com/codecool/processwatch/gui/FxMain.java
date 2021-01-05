@@ -1,5 +1,5 @@
 package com.codecool.processwatch.gui;
-
+import com.codecool.processwatch.os.OsProcessSource;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -57,7 +57,9 @@ public class FxMain extends Application {
         tableView.getColumns().add(argsColumn);
 
         var refreshButton = new Button("Refresh");
-        refreshButton.setOnAction(ignoreEvent -> System.out.println("Button pressed"));
+        OsProcessSource os=new OsProcessSource();
+
+        refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
 
         var box = new VBox();
         var scene = new Scene(box, 640, 480);

@@ -1,11 +1,14 @@
 package com.codecool.processwatch.os;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.codecool.processwatch.domain.Process;
 import com.codecool.processwatch.domain.ProcessSource;
 import com.codecool.processwatch.domain.User;
+import com.sun.jdi.connect.Connector;
 
 /**
  * A process source using the Java {@code ProcessHandle} API to retrieve information
@@ -23,23 +26,19 @@ public class OsProcessSource implements ProcessSource {
 //         ProcessHandle.allProcesses().forEach(p->{Process process = new Process(p.pid(), p.parent().hashCode(), new User(p.info().user().get()), p.info().command().get(), new String[0]);});
         ArrayList<Process> processList = new ArrayList<Process>();
         ProcessHandle.allProcesses().forEach(p->{processList.add(convertProcessHandleToProcess(p));});
-        //System.out.println(processList);
         return processList.stream();
-//        return Stream.of(processList);
+
     }
     public Process convertProcessHandleToProcess(ProcessHandle processHandle) {
 //        name converting
         String name=processHandle.info().command().orElse("");
-        ArrayList<String> part=new ArrayList<String>();
+        ArrayList<String> parts=new ArrayList<String>();
         for(String n:name.split("/")){
-            part.add(n);
-
+            parts.add(n);
         }
-        int index=part.size()-1;
-        System.out.println(part.get(index));
+        int index=parts.size()-1;
 
-        //System.out.println(processHandle.info().command().orElse(""));
-        return new Process(processHandle.pid(), processHandle.parent().hashCode(), new User(processHandle.info().user().orElse("")), part.get(index), new String[0]);
+        return new Process(processHandle.pid(), processHandle.parent().hashCode(), new User(processHandle.info().user().orElse("")), parts.get(index), new String[0]);
    }
 
 }
