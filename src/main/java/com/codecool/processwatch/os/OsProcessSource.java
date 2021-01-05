@@ -23,13 +23,23 @@ public class OsProcessSource implements ProcessSource {
 //         ProcessHandle.allProcesses().forEach(p->{Process process = new Process(p.pid(), p.parent().hashCode(), new User(p.info().user().get()), p.info().command().get(), new String[0]);});
         ArrayList<Process> processList = new ArrayList<Process>();
         ProcessHandle.allProcesses().forEach(p->{processList.add(convertProcessHandleToProcess(p));});
-        System.out.println(processList);
+        //System.out.println(processList);
         return processList.stream();
 //        return Stream.of(processList);
     }
     public Process convertProcessHandleToProcess(ProcessHandle processHandle) {
 //        name converting
-        return new Process(processHandle.pid(), processHandle.parent().hashCode(), new User(processHandle.info().user().orElse("")), processHandle.info().command().orElse(""), new String[0]);
+        String name=processHandle.info().command().orElse("");
+        ArrayList<String> part=new ArrayList<String>();
+        for(String n:name.split("/")){
+            part.add(n);
+
+        }
+        int index=part.size()-1;
+        System.out.println(part.get(index));
+
+        //System.out.println(processHandle.info().command().orElse(""));
+        return new Process(processHandle.pid(), processHandle.parent().hashCode(), new User(processHandle.info().user().orElse("")), part.get(index), new String[0]);
    }
 
 }
