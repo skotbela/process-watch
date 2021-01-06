@@ -28,6 +28,8 @@ public class ProcessWatchApp {
         refresh();
     }
 
+
+
     /**
      * Refresh the display by reading the current processes from the source.
      */
@@ -46,4 +48,9 @@ public class ProcessWatchApp {
         this.actualQuery = query;
         refresh();
     }
+    public void fresh(){
+        refresh();
+    }
+
+
 }

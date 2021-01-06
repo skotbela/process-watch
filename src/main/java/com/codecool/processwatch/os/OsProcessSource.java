@@ -20,6 +20,7 @@ public class OsProcessSource implements ProcessSource {
      */
     @Override
     public Stream<Process> getProcesses() {
+        System.out.println("hello bello");
 //        ProcessHandle.allProcesses().forEach(p->{System.out.println(p.info().arguments().map(Object::toString));});
 //        ProcessHandle.allProcesses().forEach(p->{System.out.println(p.info().arguments());});
 //        return Stream.of(new Process(1,  1, new User("root"), "init", new String[0]),
@@ -40,7 +41,7 @@ public class OsProcessSource implements ProcessSource {
         }
 
         int index=parts.size()-1;
-        System.out.println(parts.get(index));
+        //System.out.println(parts.get(index));
         String[] emptyStringArray = new String[1];
         emptyStringArray[0] = "";
         //System.out.println(processHandle.info().command().orElse(""));
