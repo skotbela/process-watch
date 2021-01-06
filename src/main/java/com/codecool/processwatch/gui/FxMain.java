@@ -6,9 +6,11 @@ import com.codecool.processwatch.domain.Query;
 import com.codecool.processwatch.os.OsProcessSource;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
@@ -20,6 +22,7 @@ import javafx.geometry.Insets;
 import javax.security.auth.Refreshable;
 
 import java.awt.*;
+//import java.awt.Label;
 
 import static javafx.collections.FXCollections.observableArrayList;
 import com.codecool.processwatch.domain.ProcessWatchApp;
@@ -76,32 +79,71 @@ public class FxMain extends Application {
         tableView.getColumns().add(totalCpuTimeColumn);
 
         var refreshButton = new Button("Refresh");
+        refreshButton.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
 //----------------------------------------------------------------
-//        GridPane grid = new GridPane();
-//        grid.setPadding(new Insets(10,
-//                10,
-//                10,
-//                10));
-//        grid.setVgap(10);
-//        grid.setHgap(10);
-//        GridPane.setConstraints(refreshButton,0,0);
-//        TextField textField=new TextField();
-//        //textField.getMaxWidth();
-//        textField.getText(0,10);
-//        //textField.accessibleTextProperty();
-//        //textField.setPrefColumnCount(10);
-//        textField.setText("Filter by User");
-//        GridPane.setConstraints(textField, 0, 0);
-//        //grid.getChildren().add(textField);
-//
-//        Button submit = new Button("Submit");
-//        GridPane.setConstraints(submit, 1, 0);
-//        //grid.getChildren().add(submit);
-//
-//        Button submit1 = new Button("Submit1");
-//        GridPane.setConstraints(submit1, 2, 0);
-//
-//        grid.getChildren().addAll(textField,submit,submit1);
+        var root = new HBox(5);
+        root.setAlignment(Pos.BASELINE_LEFT);
+
+        var rootRefres =new HBox(5);
+        rootRefres.setAlignment(Pos.CENTER);
+
+        var rootKiller =new HBox(5);
+        rootRefres.setAlignment(Pos.CENTER);
+
+        var roottextField =new HBox(5);
+        roottextField.setAlignment(Pos.CENTER);
+        root.setSpacing(400);
+
+        var buttons =new HBox(5);
+        buttons.setAlignment(Pos.BASELINE_CENTER);
+        buttons.setSpacing(457);
+
+        final Label labelRefresh =new Label("?");
+        final Tooltip tooltipRefresh= new Tooltip();
+        tooltipRefresh.setText("Active processes re-requested and display");
+        labelRefresh.setTooltip(tooltipRefresh);
+
+        final TextField textField=new TextField();
+        textField.setPrefWidth(100);
+
+        textField.accessibleTextProperty();
+        textField.setPrefColumnCount(2);
+        textField.setText("Filter by pid");
+
+
+        final Button submit = new Button("Submit");
+        submit.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+
+        final Button about = new Button("About");
+        about.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+
+        Label labelSubmit = new Label("?");
+        labelSubmit.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+        final Tooltip tooltipSubmit=new Tooltip();
+        tooltipSubmit.setText("Submit search ");
+        labelSubmit.setTooltip(tooltipSubmit);
+
+
+        final Button killer =new Button("Process killer");
+        killer.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+
+
+        Label labelKiller = new Label("?");
+        labelKiller.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+        final Tooltip tooltipKiller=new Tooltip();
+        tooltipKiller.setText("Kill the process ");
+        labelKiller.setTooltip(tooltipKiller);
+
+        rootRefres.getChildren().addAll(refreshButton,labelRefresh);
+        rootKiller.getChildren().addAll(killer,labelKiller);
+        roottextField.getChildren().addAll(textField,submit,labelSubmit);
+        buttons.getChildren().addAll(rootKiller,rootRefres);
+
+        root.getChildren().addAll(roottextField,about);
+
+
+
+
 
         OsProcessSource os=new OsProcessSource();
 
@@ -110,25 +152,15 @@ public class FxMain extends Application {
 
 //        OsProcessSource os=new OsProcessSource();
 //        refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
-        refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
+
 //------------------------------------------------------------------------------------
 
 
-        var box = new VBox();
+        var box = new VBox(buttons,root);
         var scene = new Scene(box, 640, 480);
+
         var elements = box.getChildren();
-        elements.addAll(refreshButton,textField,submit,
-                        tableView);
-//        elements.addAll(textField,submit,submit1,
-//                        tableView);
-        elements.addAll(refreshButton,
-                tableView);
-
-
-
-
-
-
+        elements.addAll(tableView);
 
         primaryStage.setScene(scene);
         primaryStage.show();
