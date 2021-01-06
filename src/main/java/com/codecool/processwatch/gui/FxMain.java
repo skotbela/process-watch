@@ -22,6 +22,7 @@ import javax.security.auth.Refreshable;
 import java.awt.*;
 
 import static javafx.collections.FXCollections.observableArrayList;
+import com.codecool.processwatch.domain.ProcessWatchApp;
 
 /**
  * The JavaFX application Window.
@@ -62,45 +63,54 @@ public class FxMain extends Application {
         processNameColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("processName"));
         var argsColumn = new TableColumn<ProcessView, String>("Arguments");
         argsColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("args"));
+        var startTimeColumn = new TableColumn<ProcessView, String>("Start Time");
+        startTimeColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("startTime"));
+        var totalCpuTimeColumn = new TableColumn<ProcessView, String>("Total CPU Time");
+        totalCpuTimeColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("totalCpuTime"));
         tableView.getColumns().add(pidColumn);
         tableView.getColumns().add(parentPidColumn);
         tableView.getColumns().add(userNameColumn);
         tableView.getColumns().add(processNameColumn);
         tableView.getColumns().add(argsColumn);
+        tableView.getColumns().add(startTimeColumn);
+        tableView.getColumns().add(totalCpuTimeColumn);
 
         var refreshButton = new Button("Refresh");
 //----------------------------------------------------------------
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10,
-                10,
-                10,
-                10));
-        grid.setVgap(10);
-        grid.setHgap(10);
-        GridPane.setConstraints(refreshButton,0,0);
-        TextField textField=new TextField();
-        //textField.getMaxWidth();
-        textField.getText(0,10);
-        textField.accessibleTextProperty();
-        textField.setPrefColumnCount(10);
-        textField.setText("Filter by User");
-        GridPane.setConstraints(textField, 0, 0);
-        grid.getChildren().add(textField);
-
-        Button submit = new Button("Submit");
-        GridPane.setConstraints(submit, 1, 0);
-        grid.getChildren().add(submit);
-
-        Button submit1 = new Button("Submit1");
-        GridPane.setConstraints(submit1, 2, 0);
-
-        grid.getChildren().addAll(textField,submit,submit1);
+//        GridPane grid = new GridPane();
+//        grid.setPadding(new Insets(10,
+//                10,
+//                10,
+//                10));
+//        grid.setVgap(10);
+//        grid.setHgap(10);
+//        GridPane.setConstraints(refreshButton,0,0);
+//        TextField textField=new TextField();
+//        //textField.getMaxWidth();
+//        textField.getText(0,10);
+//        //textField.accessibleTextProperty();
+//        //textField.setPrefColumnCount(10);
+//        textField.setText("Filter by User");
+//        GridPane.setConstraints(textField, 0, 0);
+//        //grid.getChildren().add(textField);
+//
+//        Button submit = new Button("Submit");
+//        GridPane.setConstraints(submit, 1, 0);
+//        //grid.getChildren().add(submit);
+//
+//        Button submit1 = new Button("Submit1");
+//        GridPane.setConstraints(submit1, 2, 0);
+//
+//        grid.getChildren().addAll(textField,submit,submit1);
 
         OsProcessSource os=new OsProcessSource();
 
-        //refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
-        refreshButton.setOnAction(ignoreEvent -> System.out.println("gdfg"));//ProcessWatchApp.refresh());
+        refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
+        refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
 
+//        OsProcessSource os=new OsProcessSource();
+//        refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
+        refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
 //------------------------------------------------------------------------------------
 
 
@@ -109,6 +119,10 @@ public class FxMain extends Application {
         var elements = box.getChildren();
         elements.addAll(refreshButton,textField,submit,
                         tableView);
+//        elements.addAll(textField,submit,submit1,
+//                        tableView);
+        elements.addAll(refreshButton,
+                tableView);
 
 
 
