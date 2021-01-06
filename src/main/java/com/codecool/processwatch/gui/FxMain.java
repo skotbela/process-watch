@@ -58,6 +58,8 @@ public class FxMain extends Application {
         // TODO: Factor out the repetitive code
         var tableView = new TableView<ProcessView>(displayList);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        Object selectedItems = tableView.getSelectionModel().getSelectedItems();
+        String first_Column = selectedItems.toString();
 //        tableView.getSelectionModel().setCellSelectionEnabled(true);
 //        tableView.getSelectionModel().selectAll();
         var pidColumn = new TableColumn<ProcessView, Long>("Process ID");
@@ -158,9 +160,11 @@ public class FxMain extends Application {
 
 //        OsProcessSource os=new OsProcessSource();
 //        refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
-//        refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
+        refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
 
-        refreshButton.setOnAction(ignoreEvent -> ProcessHandle.of(36012).ifPresent(ProcessHandle::destroy));
+//        killer.setOnAction(ignoreEvent -> ProcessHandle.of(39978).ifPresent(ProcessHandle::destroy));
+
+        killer.setOnAction(ignoreEvent -> System.out.println(first_Column));
 
 //------------------------------------------------------------------------------------
 
@@ -174,4 +178,6 @@ public class FxMain extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    public void getPid(tableView) {        Object selectedItems = tableView.getSelectionModel().getSelectedItems();
+        String first_Column = selectedItems.toString();}
 }
