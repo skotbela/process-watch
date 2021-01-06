@@ -77,31 +77,31 @@ public class FxMain extends Application {
 
         var refreshButton = new Button("Refresh");
 //----------------------------------------------------------------
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10,
-                10,
-                10,
-                10));
-        grid.setVgap(10);
-        grid.setHgap(10);
-        GridPane.setConstraints(refreshButton,0,0);
-        TextField textField=new TextField();
-        //textField.getMaxWidth();
-        textField.getText(0,10);
-        //textField.accessibleTextProperty();
-        //textField.setPrefColumnCount(10);
-        textField.setText("Filter by User");
-        GridPane.setConstraints(textField, 0, 0);
-        //grid.getChildren().add(textField);
-
-        Button submit = new Button("Submit");
-        GridPane.setConstraints(submit, 1, 0);
-        //grid.getChildren().add(submit);
-
-        Button submit1 = new Button("Submit1");
-        GridPane.setConstraints(submit1, 2, 0);
-
-        grid.getChildren().addAll(textField,submit,submit1);
+//        GridPane grid = new GridPane();
+//        grid.setPadding(new Insets(10,
+//                10,
+//                10,
+//                10));
+//        grid.setVgap(10);
+//        grid.setHgap(10);
+//        GridPane.setConstraints(refreshButton,0,0);
+//        TextField textField=new TextField();
+//        //textField.getMaxWidth();
+//        textField.getText(0,10);
+//        //textField.accessibleTextProperty();
+//        //textField.setPrefColumnCount(10);
+//        textField.setText("Filter by User");
+//        GridPane.setConstraints(textField, 0, 0);
+//        //grid.getChildren().add(textField);
+//
+//        Button submit = new Button("Submit");
+//        GridPane.setConstraints(submit, 1, 0);
+//        //grid.getChildren().add(submit);
+//
+//        Button submit1 = new Button("Submit1");
+//        GridPane.setConstraints(submit1, 2, 0);
+//
+//        grid.getChildren().addAll(textField,submit,submit1);
 
         OsProcessSource os=new OsProcessSource();
 
@@ -117,8 +117,10 @@ public class FxMain extends Application {
         var box = new VBox();
         var scene = new Scene(box, 640, 480);
         var elements = box.getChildren();
-        elements.addAll(textField,submit,submit1,
-                        tableView);
+//        elements.addAll(textField,submit,submit1,
+//                        tableView);
+        elements.addAll(refreshButton,
+                tableView);
 
 
 
