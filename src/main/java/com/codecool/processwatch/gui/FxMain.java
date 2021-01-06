@@ -16,6 +16,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
+import javafx.scene.control.MultipleSelectionModel;
+import javafx.scene.control.SelectionMode;
 
 import javax.security.auth.Refreshable;
 
@@ -53,6 +55,7 @@ public class FxMain extends Application {
         app = new App(displayList);
         // TODO: Factor out the repetitive code
         var tableView = new TableView<ProcessView>(displayList);
+        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         var pidColumn = new TableColumn<ProcessView, Long>("Process ID");
         pidColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, Long>("pid"));
         var parentPidColumn = new TableColumn<ProcessView, Long>("Parent Process ID");
@@ -74,6 +77,8 @@ public class FxMain extends Application {
         tableView.getColumns().add(argsColumn);
         tableView.getColumns().add(startTimeColumn);
         tableView.getColumns().add(totalCpuTimeColumn);
+
+
 
         var refreshButton = new Button("Refresh");
 //----------------------------------------------------------------
@@ -131,4 +136,5 @@ public class FxMain extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
 }
