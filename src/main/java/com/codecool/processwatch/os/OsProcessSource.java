@@ -27,7 +27,7 @@ public class OsProcessSource implements ProcessSource {
 //         ProcessHandle.allProcesses().forEach(p->{Process process = new Process(p.pid(), p.parent().hashCode(), new User(p.info().user().get()), p.info().command().get(), new String[0]);});
         ArrayList<Process> processList = new ArrayList<Process>();
         ProcessHandle.allProcesses().forEach(p->{processList.add(convertProcessHandleToProcess(p));});
-//        System.out.println(processList);
+        //System.out.println(processList);
         return processList.stream();
 
     }
