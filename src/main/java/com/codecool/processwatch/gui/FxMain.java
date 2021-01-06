@@ -81,15 +81,15 @@ public class FxMain extends Application {
         TextField textField=new TextField();
         //textField.getMaxWidth();
         textField.getText(0,10);
-        //textField.accessibleTextProperty();
-        //textField.setPrefColumnCount(10);
+        textField.accessibleTextProperty();
+        textField.setPrefColumnCount(10);
         textField.setText("Filter by User");
         GridPane.setConstraints(textField, 0, 0);
-        //grid.getChildren().add(textField);
+        grid.getChildren().add(textField);
 
         Button submit = new Button("Submit");
         GridPane.setConstraints(submit, 1, 0);
-        //grid.getChildren().add(submit);
+        grid.getChildren().add(submit);
 
         Button submit1 = new Button("Submit1");
         GridPane.setConstraints(submit1, 2, 0);
@@ -99,7 +99,7 @@ public class FxMain extends Application {
         OsProcessSource os=new OsProcessSource();
 
         //refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
-        //refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
+        refreshButton.setOnAction(ignoreEvent -> System.out.println("gdfg"));//ProcessWatchApp.refresh());
 
 //------------------------------------------------------------------------------------
 
@@ -107,7 +107,7 @@ public class FxMain extends Application {
         var box = new VBox();
         var scene = new Scene(box, 640, 480);
         var elements = box.getChildren();
-        elements.addAll(textField,submit,submit1,
+        elements.addAll(refreshButton,textField,submit,
                         tableView);
 
 
