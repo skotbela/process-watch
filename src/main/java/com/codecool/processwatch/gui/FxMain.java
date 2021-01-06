@@ -56,6 +56,8 @@ public class FxMain extends Application {
         // TODO: Factor out the repetitive code
         var tableView = new TableView<ProcessView>(displayList);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+//        tableView.getSelectionModel().setCellSelectionEnabled(true);
+//        tableView.getSelectionModel().selectAll();
         var pidColumn = new TableColumn<ProcessView, Long>("Process ID");
         pidColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, Long>("pid"));
         var parentPidColumn = new TableColumn<ProcessView, Long>("Parent Process ID");
@@ -115,7 +117,9 @@ public class FxMain extends Application {
 
 //        OsProcessSource os=new OsProcessSource();
 //        refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
-        refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
+//        refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
+
+        refreshButton.setOnAction(ignoreEvent -> ProcessHandle.of(36012).ifPresent(ProcessHandle::destroy));
 //------------------------------------------------------------------------------------
 
 

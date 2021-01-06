@@ -47,6 +47,7 @@ public class ProcessWatchApp {
         processDisplay.display(out);
     }
 
+
     /**
      * Set a new query to filter processes.
      *
