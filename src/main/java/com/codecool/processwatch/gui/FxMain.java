@@ -16,6 +16,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.scene.control.MultipleSelectionModel;
@@ -86,25 +88,29 @@ public class FxMain extends Application {
 
         var refreshButton = new Button("Refresh");
         refreshButton.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+
 //----------------------------------------------------------------
-        var root = new HBox(5);
+        var root = new HBox();
         root.setAlignment(Pos.BASELINE_LEFT);
 
-        var rootRefres =new HBox(5);
-        rootRefres.setAlignment(Pos.CENTER);
+        var rootRefres =new HBox();
+        rootRefres.setAlignment(Pos.BASELINE_CENTER);
 
-        var rootKiller =new HBox(5);
-        rootRefres.setAlignment(Pos.CENTER);
+        var rootKiller =new HBox();
+        rootKiller.setAlignment(Pos.BASELINE_CENTER);
 
-        var roottextField =new HBox(5);
-        roottextField.setAlignment(Pos.CENTER);
-        root.setSpacing(400);
+        var roottextField =new HBox();
+        roottextField.setAlignment(Pos.BASELINE_CENTER);
 
-        var buttons =new HBox(5);
+        root.setSpacing(200);
+        root.setPadding(new Insets(5,5,3,5));
+
+        var buttons =new HBox();
         buttons.setAlignment(Pos.BASELINE_CENTER);
-        buttons.setSpacing(457);
+        //buttons.setSpacing(457);
+        buttons.setPadding(new Insets(5,5,5,5));
 
-        final Label labelRefresh =new Label("?");
+        final Label labelRefresh =new Label(" ?");
         final Tooltip tooltipRefresh= new Tooltip();
         tooltipRefresh.setText("Active processes re-requested and display");
         labelRefresh.setTooltip(tooltipRefresh);
@@ -115,6 +121,7 @@ public class FxMain extends Application {
         textField.accessibleTextProperty();
         textField.setPrefColumnCount(2);
         textField.setText("Filter by pid");
+        textField.setOnMouseClicked(e->textField.setText(""));
 
 
         final Button submit = new Button("Submit");
@@ -123,18 +130,19 @@ public class FxMain extends Application {
         final Button about = new Button("About");
         about.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
 
-        Label labelSubmit = new Label("?");
+
+        Label labelSubmit = new Label(" ?");
         labelSubmit.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
         final Tooltip tooltipSubmit=new Tooltip();
         tooltipSubmit.setText("Submit search ");
         labelSubmit.setTooltip(tooltipSubmit);
 
 
-        final Button killer =new Button("Process killer");
+        final Button killer =new Button("Process kill");
         killer.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
 
 
-        Label labelKiller = new Label("?");
+        Label labelKiller = new Label(" ?");
         labelKiller.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
         final Tooltip tooltipKiller=new Tooltip();
         tooltipKiller.setText("Kill the process ");
@@ -143,35 +151,53 @@ public class FxMain extends Application {
         rootRefres.getChildren().addAll(refreshButton,labelRefresh);
         rootKiller.getChildren().addAll(killer,labelKiller);
         roottextField.getChildren().addAll(textField,submit,labelSubmit);
+
         buttons.getChildren().addAll(rootKiller,rootRefres);
 
-        root.getChildren().addAll(roottextField,about);
+        root.getChildren().addAll(roottextField,rootKiller,rootRefres,about);
 
 
-
-
-
-        OsProcessSource os=new OsProcessSource();
-
-        //refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
-        //refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
-
-//        OsProcessSource os=new OsProcessSource();
-//        refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
-//        refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
 
         refreshButton.setOnAction(ignoreEvent -> ProcessHandle.of(36012).ifPresent(ProcessHandle::destroy));
 
 //------------------------------------------------------------------------------------
 
-
-        var box = new VBox(buttons,root);
-        var scene = new Scene(box, 640, 480);
+        var box = new VBox(root);
+        var scene = new Scene(box, 1020, 480);
 
         var elements = box.getChildren();
         elements.addAll(tableView);
 
         primaryStage.setScene(scene);
         primaryStage.show();
+//------------------------------------------------------------------------------------------------------
+        Stage popupwindow=new Stage();
+
+        popupwindow.initModality(Modality.APPLICATION_MODAL);
+        popupwindow.setTitle("About Process Watch");
+        Label label=new Label("Precess Watch");
+        label.setPadding(new Insets(30,30,20,30));
+        label.setFont(new Font(20));
+
+        Label label2= new Label(" A task manager is a utility that provides a view of active processes or tasks, as well as related information, and may also allow users to enter commands that will manipulate those tasks ");
+        label2.setWrapText(true);
+        label2.setPadding(new Insets(0,10,10,10));
+
+        about.setOnAction(e -> popupwindow.showAndWait());
+
+        VBox layout= new VBox(10);
+
+
+        layout.getChildren().addAll(label,label2);
+
+        layout.setAlignment(Pos.CENTER);
+
+        Scene scene1= new Scene(layout, 300, 200);
+
+        popupwindow.setScene(scene1);
+
+//        popupwindow.showAndWait();
+//-------------------------------------------------------------------------------------------
+
     }
 }
