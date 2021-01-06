@@ -33,11 +33,20 @@ public class ProcessWatchApp {
     /**
      * Refresh the display by reading the current processes from the source.
      */
-    public static void refresh() {
+//    public static void refresh() {
+//        var in = processSource.getProcesses();
+//        var out = actualQuery.run(in);
+//        processDisplay.display(out);
+//    }
+    /**
+     *
+     */
+        public static void refresh() {
         var in = processSource.getProcesses();
         var out = actualQuery.run(in);
         processDisplay.display(out);
     }
+
 
     /**
      * Set a new query to filter processes.

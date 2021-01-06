@@ -82,13 +82,8 @@ public class Process {
     }
 
     /**
-     * Get a string representation of the process.
-     * <p>
-     * It displays the pid, ppid and user.
      *
-     * @return a String representing the process.
      */
-
 
     public String getStartTime() {
         return startTime;
@@ -99,6 +94,14 @@ public class Process {
     }
 
 
+
+    /**
+     * Get a string representation of the process.
+     * <p>
+     * It displays the pid, ppid and user.
+     *
+     * @return a String representing the process.
+     */
 
     @Override
     public String toString() {

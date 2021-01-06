@@ -18,11 +18,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
+import javafx.scene.control.MultipleSelectionModel;
+import javafx.scene.control.SelectionMode;
 
 import javax.security.auth.Refreshable;
 
 import java.awt.*;
-//import java.awt.Label;
 
 import static javafx.collections.FXCollections.observableArrayList;
 import com.codecool.processwatch.domain.ProcessWatchApp;
@@ -56,6 +57,9 @@ public class FxMain extends Application {
         app = new App(displayList);
         // TODO: Factor out the repetitive code
         var tableView = new TableView<ProcessView>(displayList);
+        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+//        tableView.getSelectionModel().setCellSelectionEnabled(true);
+//        tableView.getSelectionModel().selectAll();
         var pidColumn = new TableColumn<ProcessView, Long>("Process ID");
         pidColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, Long>("pid"));
         var parentPidColumn = new TableColumn<ProcessView, Long>("Parent Process ID");
@@ -77,6 +81,8 @@ public class FxMain extends Application {
         tableView.getColumns().add(argsColumn);
         tableView.getColumns().add(startTimeColumn);
         tableView.getColumns().add(totalCpuTimeColumn);
+
+
 
         var refreshButton = new Button("Refresh");
         refreshButton.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
@@ -147,11 +153,14 @@ public class FxMain extends Application {
 
         OsProcessSource os=new OsProcessSource();
 
-        refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
-        refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
+        //refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
+        //refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
 
 //        OsProcessSource os=new OsProcessSource();
 //        refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
+//        refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
+
+        refreshButton.setOnAction(ignoreEvent -> ProcessHandle.of(36012).ifPresent(ProcessHandle::destroy));
 
 //------------------------------------------------------------------------------------
 
