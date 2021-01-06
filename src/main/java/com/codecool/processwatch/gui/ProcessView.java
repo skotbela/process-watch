@@ -19,6 +19,8 @@ public class ProcessView {
         this.userName = new SimpleStringProperty(process.getUserName());
         this.processName = new SimpleStringProperty(process.getName());
         this.args = new SimpleStringProperty(merge(process.getArgs()));
+        this.startTime = new SimpleStringProperty(process.getStartTime());
+        this.totalCpuTime = new SimpleStringProperty(process.getTotalCpuTime());
     }
 
     private LongProperty pid;
@@ -65,6 +67,21 @@ public class ProcessView {
         return args;
     }
 
+    private StringProperty startTime;
+    public void setStartTime(String value) { startTimeProperty().set(value); }
+    public String getStartTime() { return startTimeProperty().get(); }
+    public StringProperty startTimeProperty() {
+        if (startTime == null) startTime = new SimpleStringProperty(this, "startTime");
+        return startTime;
+    }
+
+    private StringProperty totalCpuTime;
+    public void setTotalCpuTime(String value) { totalCpuTimeProperty().set(value); }
+    public String getTotalCpuTime() { return totalCpuTimeProperty().get(); }
+    public StringProperty totalCpuTimeProperty() {
+        if (totalCpuTime == null) totalCpuTime = new SimpleStringProperty(this, "totalCpuTime");
+        return totalCpuTime;
+    }
 
     private static String merge(String[] strings) {
         return String.join(" ", strings);

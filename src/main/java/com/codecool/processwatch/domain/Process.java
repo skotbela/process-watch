@@ -1,6 +1,7 @@
 package com.codecool.processwatch.domain;
 
 import java.util.Arrays;
+import java.time.Instant;
 
 /**
  * A class representing a displayable and queryable process.
@@ -11,6 +12,8 @@ public class Process {
     private User user;
     private String name;
     private String[] args;
+    private String startTime;
+    private String totalCpuTime;
 
     /**
      * Create an object representing a process.
@@ -22,12 +25,14 @@ public class Process {
      *                  that started the process.
      * @param args      the arguments of that were given to the process if any.
      */
-    public Process(long pid, long parentPid, User user, String name, String[] args) {
+    public Process(long pid, long parentPid, User user, String name, String[] args, String startTime, String totalCpuTime) {
         this.pid = pid;
         this.parentPid = parentPid;
         this.user = user;
         this.name = name;
         this.args = args;
+        this.startTime = startTime;
+        this.totalCpuTime = totalCpuTime;
     }
 
     /**
@@ -83,6 +88,18 @@ public class Process {
      *
      * @return a String representing the process.
      */
+
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getTotalCpuTime() {
+        return totalCpuTime;
+    }
+
+
+
     @Override
     public String toString() {
         return String.format("Process {pid = %6d, parentPid = %6d, user = %s}",

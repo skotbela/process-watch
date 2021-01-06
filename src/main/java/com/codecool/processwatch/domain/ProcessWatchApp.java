@@ -8,9 +8,9 @@ package com.codecool.processwatch.domain;
  * A query can be applied to filter the displayed processes.
  */
 public class ProcessWatchApp {
-    protected final ProcessSource processSource;
-    protected final ProcessDisplay processDisplay;
-    protected Query actualQuery;
+    protected static ProcessSource processSource;
+    protected static ProcessDisplay processDisplay;
+    protected static Query actualQuery;
 
     /**
      * Create an instance of the application.
@@ -31,7 +31,7 @@ public class ProcessWatchApp {
     /**
      * Refresh the display by reading the current processes from the source.
      */
-    public final void refresh() {
+    public static void refresh() {
         var in = processSource.getProcesses();
         var out = actualQuery.run(in);
         processDisplay.display(out);
@@ -42,7 +42,7 @@ public class ProcessWatchApp {
      *
      * @param query a {@code Query} to use for process filtering.
      */
-    public final void setQuery(Query query) {
+    public void setQuery(Query query) {
         this.actualQuery = query;
         refresh();
     }

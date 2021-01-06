@@ -27,7 +27,7 @@ public class OsProcessSource implements ProcessSource {
 //         ProcessHandle.allProcesses().forEach(p->{Process process = new Process(p.pid(), p.parent().hashCode(), new User(p.info().user().get()), p.info().command().get(), new String[0]);});
         ArrayList<Process> processList = new ArrayList<Process>();
         ProcessHandle.allProcesses().forEach(p->{processList.add(convertProcessHandleToProcess(p));});
-        //System.out.println(processList);
+//        System.out.println(processList);
         return processList.stream();
 
     }
@@ -38,13 +38,19 @@ public class OsProcessSource implements ProcessSource {
         for(String n:name.split("/")){
             parts.add(n);
         }
-
-        int index=parts.size()-1;
-        System.out.println(parts.get(index));
+        int index=0;
+//        System.out.println(parts.size());
+        if (parts.size()==1){parts.add("Information is not available");
+        index=0;}
+        index=parts.size()-1;
+//        System.out.println(parts.get(index));
         String[] emptyStringArray = new String[1];
-        emptyStringArray[0] = "";
+        emptyStringArray[0] = "Information is not available";
         //System.out.println(processHandle.info().command().orElse(""));
-        return new Process(processHandle.pid(), processHandle.parent().hashCode(), new User(processHandle.info().user().orElse("")), parts.get(index), processHandle.info().arguments().orElse(emptyStringArray));
+//        System.out.println(processHandle.info().arguments().toString());
+//        System.out.println(processHandle.info().startInstant().toString());
+//        System.out.println(new Process(processHandle.pid(), processHandle.parent().hashCode(), new User(processHandle.info().user().orElse("Information is not available")), parts.get(index), processHandle.info().arguments().orElse(emptyStringArray), processHandle.info().startInstant().toString()));
+        return new Process(processHandle.pid(), processHandle.parent().hashCode(), new User(processHandle.info().user().orElse("Information is not available")), parts.get(index), processHandle.info().arguments().orElse(emptyStringArray), processHandle.info().startInstant().get().toString(), processHandle.info().totalCpuDuration().get().toString());
    }
 
 }

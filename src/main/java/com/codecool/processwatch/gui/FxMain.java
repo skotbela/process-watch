@@ -10,6 +10,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import static javafx.collections.FXCollections.observableArrayList;
+import com.codecool.processwatch.domain.ProcessWatchApp;
 
 /**
  * The JavaFX application Window.
@@ -50,16 +51,23 @@ public class FxMain extends Application {
         processNameColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("processName"));
         var argsColumn = new TableColumn<ProcessView, String>("Arguments");
         argsColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("args"));
+        var startTimeColumn = new TableColumn<ProcessView, String>("Start Time");
+        startTimeColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("startTime"));
+        var totalCpuTimeColumn = new TableColumn<ProcessView, String>("Total CPU Time");
+        totalCpuTimeColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("totalCpuTime"));
         tableView.getColumns().add(pidColumn);
         tableView.getColumns().add(parentPidColumn);
         tableView.getColumns().add(userNameColumn);
         tableView.getColumns().add(processNameColumn);
         tableView.getColumns().add(argsColumn);
+        tableView.getColumns().add(startTimeColumn);
+        tableView.getColumns().add(totalCpuTimeColumn);
 
         var refreshButton = new Button("Refresh");
 //----------------------------------------------------------------
-        OsProcessSource os=new OsProcessSource();
-        refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
+//        OsProcessSource os=new OsProcessSource();
+//        refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
+        refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
 //------------------------------------------------------------------------------------
         var box = new VBox();
         var scene = new Scene(box, 640, 480);
