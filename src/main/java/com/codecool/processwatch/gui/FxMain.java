@@ -1,4 +1,5 @@
 package com.codecool.processwatch.gui;
+import com.codecool.processwatch.domain.ProcessWatchApp;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,6 +22,14 @@ import javafx.geometry.Insets;
 import javafx.scene.control.SelectionMode;
 
 import java.util.concurrent.atomic.AtomicReference;
+
+
+import javax.security.auth.Refreshable;
+import javax.swing.*;
+
+import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
@@ -133,6 +142,19 @@ public class FxMain extends Application {
         containerBox.getChildren().addAll(textFieldBox,killButtonBox,refreshButtonBox,about);
         refreshButton.setOnAction(ignoreEvent -> ProcessHandle.of(36012).ifPresent(ProcessHandle::destroy));
 
+
+        refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
+
+        killer.setOnAction(ignoreEvent ->
+        {   ArrayList < Long > arrList = new ArrayList < Long > ();
+            Integer selectedItemNumber = tableView.getSelectionModel().getSelectedItems().size();
+            for (int i = 0; i<selectedItemNumber; i++) {
+                Long selectedItem = tableView.getSelectionModel().getSelectedItems().get(i).getPid();
+                arrList.add(selectedItem);
+                ProcessHandle.of(selectedItem).ifPresent(ProcessHandle::destroy);
+                ;}
+            ProcessWatchApp.refresh();
+        });
 
 //------------------------------------------------------------------------------------
 
