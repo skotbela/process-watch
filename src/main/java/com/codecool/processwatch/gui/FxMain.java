@@ -1,10 +1,7 @@
 package com.codecool.processwatch.gui;
-import com.codecool.processwatch.domain.ProcessDisplay;
-import com.codecool.processwatch.domain.ProcessSource;
-import com.codecool.processwatch.domain.ProcessWatchApp;
-import com.codecool.processwatch.domain.Query;
-import com.codecool.processwatch.os.OsProcessSource;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,14 +10,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
-import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SelectionMode;
 
 import javax.security.auth.Refreshable;
@@ -31,7 +26,6 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static javafx.collections.FXCollections.observableArrayList;
-import com.codecool.processwatch.domain.ProcessWatchApp;
 
 /**
  * The JavaFX application Window.
@@ -79,90 +73,56 @@ public class FxMain extends Application {
         startTimeColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("startTime"));
         var totalCpuTimeColumn = new TableColumn<ProcessView, String>("Total CPU Time");
         totalCpuTimeColumn.setCellValueFactory(new PropertyValueFactory<ProcessView, String>("totalCpuTime"));
-        tableView.getColumns().add(pidColumn);
-        tableView.getColumns().add(parentPidColumn);
-        tableView.getColumns().add(userNameColumn);
-        tableView.getColumns().add(processNameColumn);
-        tableView.getColumns().add(argsColumn);
-        tableView.getColumns().add(startTimeColumn);
-        tableView.getColumns().add(totalCpuTimeColumn);
+        tableColumn(tableView, pidColumn, parentPidColumn, userNameColumn, processNameColumn, argsColumn, startTimeColumn, totalCpuTimeColumn);
 
 
 
-        var refreshButton = new Button("Refresh");
-        refreshButton.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+
 
 //----------------------------------------------------------------
-        var root = new HBox();
-        root.setAlignment(Pos.BASELINE_LEFT);
-
-        var rootRefres =new HBox();
-        rootRefres.setAlignment(Pos.BASELINE_CENTER);
-
-        var rootKiller =new HBox();
-        rootKiller.setAlignment(Pos.BASELINE_CENTER);
-
-        var roottextField =new HBox();
-        roottextField.setAlignment(Pos.BASELINE_CENTER);
-
-        root.setSpacing(200);
-        root.setPadding(new Insets(5,5,3,5));
-
-        var buttons =new HBox();
-        buttons.setAlignment(Pos.BASELINE_CENTER);
-        //buttons.setSpacing(457);
-        buttons.setPadding(new Insets(5,5,5,5));
-
-        final Label labelRefresh =new Label(" ?");
-        final Tooltip tooltipRefresh= new Tooltip();
-        tooltipRefresh.setText("Active processes re-requested and display");
-        labelRefresh.setTooltip(tooltipRefresh);
+        var containerBox = new HBox();
+        var refreshButtonBox =new HBox();
+        var killButtonBox =new HBox();
+        var textFieldBox =new HBox();
 
         final TextField textField=new TextField();
-        textField.setPrefWidth(100);
 
+        final Label labelKiller = new Label(" ?");
+        final Label labelSubmit = new Label(" ?");
+        final Label labelRefresh =new Label(" ?");
+
+        var refreshButton = new Button("Refresh");
+        final Button killer =new Button("Process kill");
+        final Button submit = new Button("Submit");
+        final Button about = new Button("About");
+
+        final Tooltip tooltipKiller=new Tooltip();
+        final Tooltip tooltipRefresh= new Tooltip();
+        final Tooltip tooltipSubmit=new Tooltip();
+
+        containerBox.setAlignment(Pos.BASELINE_LEFT);
+        refreshButtonBox.setAlignment(Pos.BASELINE_CENTER);
+        killButtonBox.setAlignment(Pos.BASELINE_CENTER);
+        textFieldBox.setAlignment(Pos.BASELINE_CENTER);
+
+        containerBox.setSpacing(200);
+        containerBox.setPadding(new Insets(5,5,3,5));
+
+        buttonStyles(labelKiller, labelSubmit, refreshButton, killer, submit, about);
+
+        textField.setPrefWidth(100);
         textField.accessibleTextProperty();
         textField.setPrefColumnCount(2);
-        textField.setText("Filter by pid");
-        textField.setOnMouseClicked(e->textField.setText(""));
 
+        toolTipSetting(textField, labelKiller, labelSubmit, labelRefresh, tooltipKiller, tooltipRefresh, tooltipSubmit);
 
-        final Button submit = new Button("Submit");
-        submit.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+        refreshButtonBox.getChildren().addAll(refreshButton,labelRefresh);
+        killButtonBox.getChildren().addAll(killer,labelKiller);
+        textFieldBox.getChildren().addAll(textField,submit,labelSubmit);
 
-        final Button about = new Button("About");
-        about.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+        containerBox.getChildren().addAll(textFieldBox,killButtonBox,refreshButtonBox,about);
+        refreshButton.setOnAction(ignoreEvent -> ProcessHandle.of(36012).ifPresent(ProcessHandle::destroy));
 
-
-        Label labelSubmit = new Label(" ?");
-        labelSubmit.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
-        final Tooltip tooltipSubmit=new Tooltip();
-        tooltipSubmit.setText("Submit search ");
-        labelSubmit.setTooltip(tooltipSubmit);
-
-
-        final Button killer =new Button("Process kill");
-        killer.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
-
-
-        Label labelKiller = new Label(" ?");
-        labelKiller.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
-        final Tooltip tooltipKiller=new Tooltip();
-        tooltipKiller.setText("Kill the process ");
-        labelKiller.setTooltip(tooltipKiller);
-
-        rootRefres.getChildren().addAll(refreshButton,labelRefresh);
-        rootKiller.getChildren().addAll(killer,labelKiller);
-        roottextField.getChildren().addAll(textField,submit,labelSubmit);
-
-        buttons.getChildren().addAll(rootKiller,rootRefres);
-
-        root.getChildren().addAll(roottextField,rootKiller,rootRefres,about);
-
-
-
-
-        OsProcessSource os=new OsProcessSource();
 
         refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
 
@@ -176,9 +136,10 @@ public class FxMain extends Application {
                 ;}
             ProcessWatchApp.refresh();
         });
+
 //------------------------------------------------------------------------------------
 
-        var box = new VBox(root);
+        var box = new VBox(containerBox);
         var scene = new Scene(box, 1020, 480);
 
         var elements = box.getChildren();
@@ -186,12 +147,52 @@ public class FxMain extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
-//------------------------------------------------------------------------------------------------------
+
+        aboutPopUpWindow(about);
+
+   }
+
+    private void buttonStyles(Label labelKiller, Label labelSubmit, Button refreshButton, Button killer, Button submit, Button about) {
+        refreshButton.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+        labelSubmit.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+        labelKiller.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+        killer.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+        submit.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+        about.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
+    }
+
+    private void toolTipSetting(TextField textField, Label labelKiller, Label labelSubmit, Label labelRefresh, Tooltip tooltipKiller, Tooltip tooltipRefresh, Tooltip tooltipSubmit) {
+        tooltipRefresh.setText("Active processes re-requested and display");
+        labelRefresh.setTooltip(tooltipRefresh);
+        tooltipKiller.setText("Kill the process ");
+        labelKiller.setTooltip(tooltipKiller);
+        tooltipSubmit.setText("Submit search ");
+        labelSubmit.setTooltip(tooltipSubmit);
+        textField.setText("Filter by pid");
+        textField.setOnMouseClicked(e-> textField.setText(""));
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                textField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+    }
+
+    private void tableColumn(TableView<ProcessView> tableView, TableColumn<ProcessView, Long> pidColumn, TableColumn<ProcessView, Long> parentPidColumn, TableColumn<ProcessView, String> userNameColumn, TableColumn<ProcessView, String> processNameColumn, TableColumn<ProcessView, String> argsColumn, TableColumn<ProcessView, String> startTimeColumn, TableColumn<ProcessView, String> totalCpuTimeColumn) {
+        tableView.getColumns().add(pidColumn);
+        tableView.getColumns().add(parentPidColumn);
+        tableView.getColumns().add(userNameColumn);
+        tableView.getColumns().add(processNameColumn);
+        tableView.getColumns().add(argsColumn);
+        tableView.getColumns().add(startTimeColumn);
+        tableView.getColumns().add(totalCpuTimeColumn);
+    }
+
+    private void aboutPopUpWindow(Button about) {
         Stage popupwindow=new Stage();
 
         popupwindow.initModality(Modality.APPLICATION_MODAL);
         popupwindow.setTitle("About Process Watch");
-        Label label=new Label("Precess Watch");
+        Label label=new Label("Process Watch");
         label.setPadding(new Insets(30,30,20,30));
         label.setFont(new Font(20));
 
@@ -203,7 +204,6 @@ public class FxMain extends Application {
 
         VBox layout= new VBox(10);
 
-
         layout.getChildren().addAll(label,label2);
 
         layout.setAlignment(Pos.CENTER);
@@ -211,8 +211,5 @@ public class FxMain extends Application {
         Scene scene1= new Scene(layout, 300, 200);
 
         popupwindow.setScene(scene1);
-
-//        popupwindow.showAndWait();
-//-------------------------------------------------------------------------------------------
     }
 }
