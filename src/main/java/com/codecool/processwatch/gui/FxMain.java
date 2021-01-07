@@ -1,5 +1,8 @@
 package com.codecool.processwatch.gui;
 import com.codecool.processwatch.domain.ProcessWatchApp;
+import com.codecool.processwatch.domain.Query;
+import com.codecool.processwatch.queries.SelectAll;
+import com.codecool.processwatch.queries.SelectUser;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,6 +27,7 @@ import javafx.scene.control.SelectionMode;
 import java.util.concurrent.atomic.AtomicReference;
 
 
+import javax.lang.model.element.Element;
 import javax.security.auth.Refreshable;
 import javax.swing.*;
 
@@ -40,7 +44,6 @@ public class FxMain extends Application {
     private static final String TITLE = "Process Watch";
 
     private App app;
-//    private TableView tableView;
 
     /**
      * Entrypoint for the javafx:run maven task.
@@ -86,6 +89,7 @@ public class FxMain extends Application {
 
 
 
+
 //----------------------------------------------------------------
         var containerBox = new HBox();
         var refreshButtonBox =new HBox();
@@ -115,10 +119,12 @@ public class FxMain extends Application {
         final Tooltip tooltipKiller=new Tooltip();
         final Tooltip tooltipRefresh= new Tooltip();
         final Tooltip tooltipSubmit=new Tooltip();
-        AtomicReference<String> textFieldInput= new AtomicReference<>("");
-//        submit.setOnAction(e-> textFieldInput.set(textField.getText()));
-        submit.setOnAction(e-> search(textField.getText(), tableView));
-//        System.out.println(textFieldInput.toString());
+        String textFieldInput="";
+        //AtomicReference<String> textFieldInput= new AtomicReference<>("");
+        //submit.setOnAction(e-> searc(textField.getText(),tableView));
+        submit.setOnAction(e-> submitFilter(textField,choiceBox));
+
+        //System.out.println(textFieldInput.get());
 
         containerBox.setAlignment(Pos.BASELINE_LEFT);
         refreshButtonBox.setAlignment(Pos.BASELINE_CENTER);
@@ -163,7 +169,6 @@ public class FxMain extends Application {
         var scene = new Scene(box, 1020, 480);
 
         var elements = box.getChildren();
-
         elements.addAll(tableView);
 
         primaryStage.setScene(scene);
@@ -173,7 +178,7 @@ public class FxMain extends Application {
 
    }
 
-    private void search(String text,TableView <ProcessView> tableView) {
+    private void searc(String text,TableView <ProcessView> tableView) {
         ArrayList <ProcessView>filteredList = new ArrayList<ProcessView>();
         ObservableList<ProcessView> allListItems = tableView.getItems();
         for (ProcessView processView: allListItems) {
@@ -181,8 +186,8 @@ public class FxMain extends Application {
                 filteredList.add(processView);
             }
         }
-
-
+        //tableView.setItems(filteredList);
+        filteredList.forEach(e-> System.out.println(e.getUserName()));
     }
 
     private void buttonStyles(Label labelKiller, Label labelSubmit, Button refreshButton, Button killer, Button submit, Button about) {
@@ -251,4 +256,24 @@ public class FxMain extends Application {
 
         popupwindow.setScene(scene1);
     }
+
+    private void submitFilter(TextField textField,ChoiceBox<String> choiceBox){
+        String filterType=choiceBox.getValue();
+        Query newQuery;
+        String inputText=textField.getText();
+        System.out.println(inputText);
+        boolean emptyInputField=textField.equals("");
+        boolean filterForUser =filterType.equals("User");
+        if(emptyInputField){
+            newQuery = new SelectAll();
+        }else if (filterForUser){
+            newQuery= new SelectUser(inputText);
+        }
+        textField.setText("");
+        app.setQuery(newQuery);
+        }
+
+
+
+
 }
