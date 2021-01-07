@@ -15,6 +15,7 @@ public class SelectUser implements Query {
      * {@inheritDoc}
      */
     public SelectUser(String keyword){
+        System.out.println("User");
         this.keyword=keyword;
     }
     @Override

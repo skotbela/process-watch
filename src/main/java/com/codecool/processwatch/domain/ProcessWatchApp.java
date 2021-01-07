@@ -45,11 +45,19 @@ public class ProcessWatchApp {
      *
      * @param query a {@code Query} to use for process filtering.
      */
-    public final void setQuery(Query query) {
-        this.actualQuery = query;
-        refresh();
-    }
+//    public final void setQuery(Query query) {
+//        this.actualQuery = query;
+////        refresh();
+//    }
+    public static void setQuery(Query query) {
+        System.out.println("actualQuery");
+        ProcessWatchApp.actualQuery = query;
+        var in = processSource.getProcesses();
+        var out = actualQuery.run(in);
+        processDisplay.display(out);
 
+
+    }
 
 
 }

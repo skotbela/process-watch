@@ -264,13 +264,18 @@ public class FxMain extends Application {
         System.out.println(inputText);
         boolean emptyInputField=textField.equals("");
         boolean filterForUser =filterType.equals("User");
-        if(emptyInputField){
+//        if(emptyInputField){
+        if(false){
             newQuery = new SelectAll();
-        }else if (filterForUser){
+            ProcessWatchApp.setQuery(newQuery);
+//        }else if (filterForUser){
+        }else if (true){
             newQuery= new SelectUser(inputText);
+            System.out.println(newQuery);
+            ProcessWatchApp.setQuery(newQuery);
         }
         textField.setText("");
-//        app.setQuery(newQuery);
+
         }
 
 
