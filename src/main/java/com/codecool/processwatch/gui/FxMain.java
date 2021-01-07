@@ -2,6 +2,7 @@ package com.codecool.processwatch.gui;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,12 +12,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.scene.control.SelectionMode;
+
+import java.util.concurrent.atomic.AtomicReference;
+
 import static javafx.collections.FXCollections.observableArrayList;
 
 /**
@@ -79,10 +84,19 @@ public class FxMain extends Application {
 
         final TextField textField=new TextField();
 
+        ChoiceBox choiceBox = new ChoiceBox();
+        choiceBox.setItems(FXCollections.observableArrayList(
+        "pid", "name"));
+        String[] choiceBoxList= new String[]{"pid","name"};
+
+        TilePane r = new TilePane();
+
+        final Label labelChoiceBox = new Label("Filter by");
         final Label labelKiller = new Label(" ?");
         final Label labelSubmit = new Label(" ?");
         final Label labelRefresh =new Label(" ?");
 
+        r.getChildren().add(labelChoiceBox);
         var refreshButton = new Button("Refresh");
         final Button killer =new Button("Process kill");
         final Button submit = new Button("Submit");
@@ -91,26 +105,30 @@ public class FxMain extends Application {
         final Tooltip tooltipKiller=new Tooltip();
         final Tooltip tooltipRefresh= new Tooltip();
         final Tooltip tooltipSubmit=new Tooltip();
+        AtomicReference<String> textFieldInput= new AtomicReference<>("");
+        submit.setOnAction(e-> textFieldInput.set(textField.getText()));
+
+        System.out.println(textFieldInput.toString());
 
         containerBox.setAlignment(Pos.BASELINE_LEFT);
         refreshButtonBox.setAlignment(Pos.BASELINE_CENTER);
         killButtonBox.setAlignment(Pos.BASELINE_CENTER);
         textFieldBox.setAlignment(Pos.BASELINE_CENTER);
 
-        containerBox.setSpacing(200);
+        containerBox.setSpacing(150);
         containerBox.setPadding(new Insets(5,5,3,5));
 
         buttonStyles(labelKiller, labelSubmit, refreshButton, killer, submit, about);
 
-        textField.setPrefWidth(100);
+        textField.setPrefWidth(110);
         textField.accessibleTextProperty();
         textField.setPrefColumnCount(2);
 
-        toolTipSetting(textField, labelKiller, labelSubmit, labelRefresh, tooltipKiller, tooltipRefresh, tooltipSubmit);
+        toolTipSetting(choiceBoxList,choiceBox,textField, labelKiller, labelSubmit, labelRefresh, tooltipKiller, tooltipRefresh, tooltipSubmit);
 
         refreshButtonBox.getChildren().addAll(refreshButton,labelRefresh);
         killButtonBox.getChildren().addAll(killer,labelKiller);
-        textFieldBox.getChildren().addAll(textField,submit,labelSubmit);
+        textFieldBox.getChildren().addAll(labelChoiceBox,choiceBox,textField,submit,labelSubmit);
 
         containerBox.getChildren().addAll(textFieldBox,killButtonBox,refreshButtonBox,about);
         refreshButton.setOnAction(ignoreEvent -> ProcessHandle.of(36012).ifPresent(ProcessHandle::destroy));
@@ -140,20 +158,26 @@ public class FxMain extends Application {
         about.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
     }
 
-    private void toolTipSetting(TextField textField, Label labelKiller, Label labelSubmit, Label labelRefresh, Tooltip tooltipKiller, Tooltip tooltipRefresh, Tooltip tooltipSubmit) {
+    private void toolTipSetting(String[] choiceBoxlist,ChoiceBox choiceBox,TextField textField, Label labelKiller, Label labelSubmit, Label labelRefresh, Tooltip tooltipKiller, Tooltip tooltipRefresh, Tooltip tooltipSubmit) {
         tooltipRefresh.setText("Active processes re-requested and display");
         labelRefresh.setTooltip(tooltipRefresh);
         tooltipKiller.setText("Kill the process ");
         labelKiller.setTooltip(tooltipKiller);
         tooltipSubmit.setText("Submit search ");
         labelSubmit.setTooltip(tooltipSubmit);
-        textField.setText("Filter by pid");
-        textField.setOnMouseClicked(e-> textField.setText(""));
-        textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                textField.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
+        //textField.setText("");
+       choiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+           @Override
+           public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+               int k=t1.intValue();
+               System.out.println(choiceBoxlist[k]);
+               if(k==0){
+                   textField.setText("only numbers");
+               }else{textField.setText("");}
+               textField.setOnMouseClicked(e->textField.setText(""));
+           }
+       });
+
     }
 
     private void tableColumn(TableView<ProcessView> tableView, TableColumn<ProcessView, Long> pidColumn, TableColumn<ProcessView, Long> parentPidColumn, TableColumn<ProcessView, String> userNameColumn, TableColumn<ProcessView, String> processNameColumn, TableColumn<ProcessView, String> argsColumn, TableColumn<ProcessView, String> startTimeColumn, TableColumn<ProcessView, String> totalCpuTimeColumn) {
