@@ -1,4 +1,5 @@
 package com.codecool.processwatch.gui;
+import com.codecool.processwatch.domain.ProcessWatchApp;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
