@@ -270,7 +270,7 @@ public class FxMain extends Application {
             newQuery= new SelectUser(inputText);
         }
         textField.setText("");
-        app.setQuery(newQuery);
+//        app.setQuery(newQuery);
         }
 
 

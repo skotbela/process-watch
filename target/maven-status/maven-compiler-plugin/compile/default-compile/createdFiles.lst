@@ -3,6 +3,7 @@ com/codecool/processwatch/domain/ProcessWatchApp.class
 com/codecool/processwatch/gui/ProcessView.class
 com/codecool/processwatch/os/OsProcessSource.class
 com/codecool/processwatch/gui/GuiProcessDisplay.class
+com/codecool/processwatch/queries/SelectUser.class
 com/codecool/processwatch/gui/FxMain.class
 com/codecool/processwatch/domain/User.class
 com/codecool/processwatch/domain/ProcessSource.class
