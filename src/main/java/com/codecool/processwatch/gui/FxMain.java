@@ -24,8 +24,11 @@ import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SelectionMode;
 
 import javax.security.auth.Refreshable;
+import javax.swing.*;
 
 import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import static javafx.collections.FXCollections.observableArrayList;
 import com.codecool.processwatch.domain.ProcessWatchApp;
@@ -60,8 +63,6 @@ public class FxMain extends Application {
         // TODO: Factor out the repetitive code
         var tableView = new TableView<ProcessView>(displayList);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        Object selectedItems = tableView.getSelectionModel().getSelectedItems();
-        String first_Column = selectedItems.toString();
 //        tableView.getSelectionModel().setCellSelectionEnabled(true);
 //        tableView.getSelectionModel().selectAll();
         var pidColumn = new TableColumn<ProcessView, Long>("Process ID");
@@ -163,17 +164,18 @@ public class FxMain extends Application {
 
         OsProcessSource os=new OsProcessSource();
 
-        //refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
-        //refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
-
-//        OsProcessSource os=new OsProcessSource();
-//        refreshButton.setOnAction(ignoreEvent -> os.getProcesses());
         refreshButton.setOnAction(ignoreEvent -> ProcessWatchApp.refresh());
 
-//        killer.setOnAction(ignoreEvent -> ProcessHandle.of(39978).ifPresent(ProcessHandle::destroy));
-
-        killer.setOnAction(ignoreEvent -> System.out.println(first_Column));
-
+        killer.setOnAction(ignoreEvent ->
+        {   ArrayList < Long > arrList = new ArrayList < Long > ();
+            Integer selectedItemNumber = tableView.getSelectionModel().getSelectedItems().size();
+            for (int i = 0; i<selectedItemNumber; i++) {
+                Long selectedItem = tableView.getSelectionModel().getSelectedItems().get(i).getPid();
+                arrList.add(selectedItem);
+                ProcessHandle.of(selectedItem).ifPresent(ProcessHandle::destroy);
+                ;}
+            ProcessWatchApp.refresh();
+        });
 //------------------------------------------------------------------------------------
 
         var box = new VBox(root);
@@ -212,8 +214,5 @@ public class FxMain extends Application {
 
 //        popupwindow.showAndWait();
 //-------------------------------------------------------------------------------------------
-
     }
-    public void getPid(tableView) {        Object selectedItems = tableView.getSelectionModel().getSelectedItems();
-        String first_Column = selectedItems.toString();}
 }
